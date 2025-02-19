@@ -47,7 +47,7 @@ Choose the installation method that best suits your environment and needs.
    cd C:\
    
    # Download installer
-   curl -o install.bat https://raw.githubusercontent.com/techjamlabs/tjl-project-setup/main/install.bat
+   curl -o install.bat https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/install.bat
    
    # Run installer
    .\install.bat
@@ -64,7 +64,7 @@ Choose the installation method that best suits your environment and needs.
 1. **Download Installer**
    ```bash
    # Download installer
-   curl -O https://raw.githubusercontent.com/techjamlabs/tjl-project-setup/main/install.sh
+   curl -O https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/install.sh
    
    # Make executable
    chmod +x install.sh
@@ -87,7 +87,7 @@ Choose the installation method that best suits your environment and needs.
 
 1. **Download Docker Setup**
    ```bash
-   curl -O https://raw.githubusercontent.com/techjamlabs/tjl-project-setup/main/docker-setup.sh
+   curl -O https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/docker-setup.sh
    chmod +x docker-setup.sh
    ```
 
@@ -192,7 +192,7 @@ rm ~/.local/bin/tjl-docker
 If you encounter any issues:
 - Email: ben@techjamlabs.com
 - Phone: +2348099999928
-- GitHub Issues: [TJL Project Setup Issues](https://github.com/techjamlabs/tjl-project-setup/issues)
+- GitHub Issues: [TJL Project Setup Issues](https://github.com/TechJam-Labs/TJL-Project-Starter/issues)
 
 ## Next Steps
 
