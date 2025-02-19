@@ -2,15 +2,15 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/TechJam-Labs/tjl-project-setup/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/TechJam-Labs/tjl-project-starter/releases)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TechJam-Labs/tjl-project-setup/pulls)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/TechJam-Labs/tjl-project-starter/pulls)
 
 *Enterprise-grade project initialization and management system*
 
 [Installation](#installation) • 
 [Documentation](docs/README.md) • 
-[Issues](https://github.com/TechJam-Labs/tjl-project-setup/issues)
+[Issues](https://github.com/TechJam-Labs/tjl-project-starter/issues)
 
 </div>
 
@@ -721,7 +721,7 @@ source config/local/env.conf
 ### Technical Support
 - **Email**: ben@techjamlabs.com
 - **Phone**: +2348099999928
-- **Issues**: [GitHub Issues](https://github.com/TechJam-Labs/tjl-project-setup/issues)
+- **Issues**: [GitHub Issues](https://github.com/TechJam-Labs/tjl-project-starter/issues)
 
 ### Documentation & Resources
 - [Complete Documentation](docs/README.md)

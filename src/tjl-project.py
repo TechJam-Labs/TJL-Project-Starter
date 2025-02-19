@@ -11,7 +11,7 @@ Email: ben@techjamlabs.com
 Phone: +2348099999928
 Version: 1.0.0
 License: MIT
-Repository: https://github.com/techjamlabs/tjl-project-setup
+Repository: https://github.com/techjamlabs/tjl-project-starter
 
 Usage:
 ------

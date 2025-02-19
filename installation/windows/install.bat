@@ -103,4 +103,7 @@ echo For help:
 echo   tjl-project --help
 echo.
 
+:: Update clone URL
+git clone https://github.com/TechJam-Labs/tjl-project-starter.git
+
 endlocal
