@@ -36,7 +36,7 @@
 
 ### Purpose
 
-The TJL Project Setup Tool is designed to establish a standardized, enterprise-grade project initialization and management system. It implements industry best practices for:
+The TJL Project Setup Tool is designed to establish a standardized, enterprise-grade project initialization and management system. Inspired by Paolo Perrotta's excellent course "How Git Works" on [Pluralsight](https://www.pluralsight.com/courses/how-git-works) (thanks to Google Africa Developer Scholarship program ❤️🙏 2020), and years of experience struggling to start projects quickly and efficiently, whilsts maintaining industry best practices. This tool implements best practices for:
 
 - 🏗️ **Project Structure Organization**
   - Standardized directory layouts
