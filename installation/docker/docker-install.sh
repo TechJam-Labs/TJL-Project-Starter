@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
-# TJL Project Setup Tool - Docker Installer
+# TJL Project Setup Tool - Docker Setup
 # Author: Ben Adenle
 # Email: ben@techjamlabs.com
+
+# Exit on error
+set -e
 
 # Colors for output
 RED='\033[0;31m'
@@ -18,7 +21,7 @@ print_red() { echo -e "${RED}$1${NC}"; }
 print_yellow() { echo -e "${YELLOW}$1${NC}"; }
 
 # Header
-print_blue "=== TJL Project Setup Tool - Docker Installation ==="
+print_blue "=== TJL Project Setup Tool - Docker Setup ==="
 echo
 
 # Check Docker installation
@@ -35,58 +38,82 @@ print_blue "Creating Dockerfile..."
 cat > Dockerfile << 'EOF'
 FROM python:3.9-slim
 
-# Install git
+# Install system dependencies
 RUN apt-get update && \
-    apt-get install -y git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up working directory
+WORKDIR /app
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy TJL Project Setup Tool
-COPY tjl-project.py /usr/local/bin/tjl-project
-RUN chmod +x /usr/local/bin/tjl-project
+COPY . /app/
 
-# Set working directory
-WORKDIR /workspace
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV TJL_PROJECT_ROOT=/app
+ENV TJL_PROJECT_TEMPLATES=/app/templates
+ENV TJL_PROJECT_DOCS=/app/docs
 
-# Set entrypoint
-ENTRYPOINT ["tjl-project"]
+# Create entrypoint
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["--help"]
 EOF
 
-print_green "✓ Created Dockerfile"
+# Create requirements.txt
+print_blue "Creating requirements.txt..."
+cat > requirements.txt << 'EOF'
+click>=8.0.0
+colorama>=0.4.4
+jinja2>=3.0.0
+pyyaml>=5.4.0
+EOF
 
-# Build Docker image
-print_blue "Building Docker image..."
-docker build -t tjl-project .
-if [ $? -ne 0 ]; then
-    print_red "Error: Failed to build Docker image"
-    exit 1
-fi
-print_green "✓ Built Docker image"
+# Create Docker entrypoint script
+print_blue "Creating entrypoint script..."
+cat > docker-entrypoint.sh << 'EOF'
+#!/bin/bash
+set -e
 
-# Create shell alias
-SHELL_CONFIG=""
-if [ -n "$ZSH_VERSION" ]; then
-    SHELL_CONFIG="$HOME/.zshrc"
-elif [ -n "$BASH_VERSION" ]; then
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        SHELL_CONFIG="$HOME/.bash_profile"
-    else
-        SHELL_CONFIG="$HOME/.bashrc"
+# Function to fix permissions
+fix_permissions() {
+    # Get host user's UID and GID
+    if [ -n "$HOST_UID" ] && [ -n "$HOST_GID" ]; then
+        # Create group if it doesn't exist
+        groupadd -g $HOST_GID tjlgroup 2>/dev/null || true
+        # Create user if it doesn't exist
+        useradd -u $HOST_UID -g $HOST_GID -m tjluser 2>/dev/null || true
+        # Change ownership of the workspace
+        chown -R $HOST_UID:$HOST_GID /workspace
     fi
-fi
+}
 
-if [ -n "$SHELL_CONFIG" ]; then
-    # Add Docker alias
-    if ! grep -q "alias tjl-docker=" "$SHELL_CONFIG"; then
-        echo 'alias tjl-docker="docker run -v $(pwd):/workspace tjl-project"' >> "$SHELL_CONFIG"
-        print_green "✓ Added Docker alias"
-    else
-        print_yellow "! Docker alias already exists"
-    fi
-fi
+# Create workspace if it doesn't exist
+mkdir -p /workspace
 
-# Create Docker Compose file
-print_blue "Creating Docker Compose file..."
+# Fix permissions
+fix_permissions
+
+# Switch to workspace
+cd /workspace
+
+# Execute tjl-project with provided arguments
+exec python /app/tjl-project.py "$@"
+EOF
+
+chmod +x docker-entrypoint.sh
+
+# Create docker-compose.yml
+print_blue "Creating docker-compose.yml..."
 cat > docker-compose.yml << 'EOF'
 version: '3.8'
 
@@ -95,23 +122,97 @@ services:
     build: .
     volumes:
       - .:/workspace
+    environment:
+      - HOST_UID=${UID:-1000}
+      - HOST_GID=${GID:-1000}
+    working_dir: /workspace
 EOF
 
-print_green "✓ Created Docker Compose file"
+# Build Docker image
+print_blue "Building Docker image..."
+docker build -t tjl-project .
+print_green "✓ Built Docker image"
 
-# Final instructions
+# Create convenience script
+print_blue "Creating convenience script..."
+cat > tjl-docker << 'EOF'
+#!/bin/bash
+docker run -it --rm \
+    -v "$(pwd):/workspace" \
+    -e HOST_UID=$(id -u) \
+    -e HOST_GID=$(id -g) \
+    tjl-project "$@"
+EOF
+
+chmod +x tjl-docker
+print_green "✓ Created convenience script"
+
+# Add to PATH if possible
+if [ -d "$HOME/.local/bin" ]; then
+    mv tjl-docker "$HOME/.local/bin/"
+    print_green "✓ Installed convenience script to ~/.local/bin"
+else
+    print_yellow "! Could not install to PATH. The tjl-docker script remains in the current directory."
+fi
+
+# Create shell completion for Docker usage
+print_blue "Creating shell completion..."
+COMPLETION_DIR="$HOME/.local/share/bash-completion/completions"
+mkdir -p "$COMPLETION_DIR"
+
+cat > "$COMPLETION_DIR/tjl-docker" << 'EOF'
+_tjl_docker_completion() {
+    local cur prev opts templates environments
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    
+    opts="--path --environments --template --help --version"
+    templates="basic microservice webapp library"
+    environments="local,dev,staging,prod"
+    
+    case ${prev} in
+        --template)
+            COMPREPLY=( $(compgen -W "${templates}" -- ${cur}) )
+            return 0
+            ;;
+        --path)
+            COMPREPLY=( $(compgen -d -- ${cur}) )
+            return 0
+            ;;
+        --environments)
+            COMPREPLY=( $(compgen -W "${environments}" -- ${cur}) )
+            return 0
+            ;;
+        *)
+            if [[ ${cur} == -* ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+                return 0
+            fi
+            COMPREPLY=( $(compgen -d -- ${cur}) )
+            return 0
+            ;;
+    esac
+}
+
+complete -F _tjl_docker_completion tjl-docker
+EOF
+
+print_green "✓ Created shell completion"
+
+# Print completion message
 echo
-print_green "Docker installation complete!"
+print_green "Docker setup complete!"
 echo
 echo "You can now use TJL Project Setup Tool with Docker:"
 echo
-echo "Using Docker directly:"
-echo "  docker run -v \$(pwd):/workspace tjl-project my-project"
+echo "Using docker-compose:"
+echo "  docker-compose run --rm tjl-project my-project"
 echo
-echo "Using the alias (after restarting terminal):"
+echo "Using convenience script:"
 echo "  tjl-docker my-project"
 echo
-echo "Using Docker Compose:"
-echo "  docker-compose run --rm tjl-project my-project"
+echo "For help:"
+echo "  tjl-docker --help"
 echo
 print_blue "Happy coding!"
