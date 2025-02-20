@@ -35,27 +35,22 @@ Choose the installation method that best suits your environment and needs.
 
 ### Windows Installation
 
-1. **Administrator Mode**
+1. **Download Repository**
    ```powershell
-   # Run PowerShell as Administrator
-   Start-Process powershell -Verb RunAs
+   # Clone the repository
+   git clone https://github.com/TechJam-Labs/TJL-Project-Starter.git
+   cd TJL-Project-Starter
    ```
 
-2. **Download and Install**
+2. **Run Installer**
    ```powershell
-   # Navigate to desired location
-   cd C:\
-   
-   # Download installer
-   curl -o install.bat https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/installation/windows/install.bat
-   
-   # Run installer
-   .\install.bat
+   # Run installer from project root
+   .\installation\windows\install.bat
    ```
 
-3. **Verify PATH**
+3. **Verify Installation**
    ```powershell
-   # Restart PowerShell and verify installation
+   # Restart PowerShell and verify
    tjl-project --version
    ```
 

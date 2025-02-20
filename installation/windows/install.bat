@@ -77,11 +77,16 @@ pip install colorama click jinja2 pyyaml
 echo %BLUE%Copying files...%RESET%
 
 :: Copy main script
-copy /Y "src\tjl-project.py" "%BIN_DIR%\" > nul
+echo %BLUE%Copying main script...%RESET%
+copy /Y "src\tjl-project.py" "%BIN_DIR%\tjl-project.py" > nul
 if %ERRORLEVEL% neq 0 (
-    echo %RED%Error: Failed to copy tjl-project.py%RESET%
+    echo %RED%Error: Failed to copy main script%RESET%
+    echo Please ensure you're running the installer from the project root directory
+    echo Current directory: %CD%
+    echo Expected file: %CD%\src\tjl-project.py
     exit /b 1
 )
+echo %GREEN%√ Copied main script%RESET%
 
 :: Copy templates
 echo %BLUE%Copying template directories...%RESET%
