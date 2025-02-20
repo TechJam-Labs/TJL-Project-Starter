@@ -47,7 +47,7 @@ Choose the installation method that best suits your environment and needs.
    cd C:\
    
    # Download installer
-   curl -o install.bat https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/installation/windowsinstall.bat
+   curl -o install.bat https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/installation/windows/install.bat
    
    # Run installer
    .\install.bat
