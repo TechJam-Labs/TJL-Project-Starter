@@ -77,25 +77,59 @@ pip install colorama click jinja2 pyyaml
 echo %BLUE%Copying files...%RESET%
 
 :: Copy main script
-copy /Y "tjl-project.py" "%BIN_DIR%\" > nul
+copy /Y "src\tjl-project.py" "%BIN_DIR%\" > nul
 if %ERRORLEVEL% neq 0 (
     echo %RED%Error: Failed to copy tjl-project.py%RESET%
     exit /b 1
 )
 
 :: Copy templates
-xcopy /E /I /Y "templates\*" "%TEMPLATES_DIR%" > nul
+echo %BLUE%Copying template directories...%RESET%
+xcopy /E /I /Y "templates\basic" "%TEMPLATES_DIR%\basic" > nul
+xcopy /E /I /Y "templates\microservice" "%TEMPLATES_DIR%\microservice" > nul
+xcopy /E /I /Y "templates\webapp" "%TEMPLATES_DIR%\webapp" > nul
+xcopy /E /I /Y "templates\library" "%TEMPLATES_DIR%\library" > nul
 if %ERRORLEVEL% neq 0 (
     echo %RED%Error: Failed to copy templates%RESET%
     exit /b 1
 )
+echo %GREEN%√ Copied templates%RESET%
 
 :: Copy documentation
+echo %BLUE%Copying documentation...%RESET%
 xcopy /E /I /Y "docs\*" "%DOCS_DIR%" > nul
 if %ERRORLEVEL% neq 0 (
     echo %RED%Error: Failed to copy documentation%RESET%
     exit /b 1
 )
+echo %GREEN%√ Copied documentation%RESET%
+
+:: Copy completion scripts
+echo %BLUE%Copying completion scripts...%RESET%
+copy /Y "completion\tjl-project.bash" "%COMPLETION_DIR%\" > nul
+copy /Y "completion\tjl-project.zsh" "%COMPLETION_DIR%\" > nul
+
+:: Copy utility scripts
+echo %BLUE%Copying utility scripts...%RESET%
+copy /Y "scripts\switch_env.sh" "%BIN_DIR%\" > nul
+copy /Y "scripts\deploy.sh" "%BIN_DIR%\" > nul
+if %ERRORLEVEL% neq 0 (
+    echo %RED%Error: Failed to copy utility scripts%RESET%
+    exit /b 1
+)
+echo %GREEN%√ Copied utility scripts%RESET%
+
+:: Copy example files
+echo %BLUE%Copying example projects...%RESET%
+xcopy /E /I /Y "examples\basic-example" "%INSTALL_DIR%\examples\basic" > nul
+xcopy /E /I /Y "examples\microservice-example" "%INSTALL_DIR%\examples\microservice" > nul
+xcopy /E /I /Y "examples\webapp-example" "%INSTALL_DIR%\examples\webapp" > nul
+xcopy /E /I /Y "examples\library-example" "%INSTALL_DIR%\examples\library" > nul
+if %ERRORLEVEL% neq 0 (
+    echo %RED%Error: Failed to copy example projects%RESET%
+    exit /b 1
+)
+echo %GREEN%√ Copied example projects%RESET%
 
 :: Create batch wrapper
 set "BATCH_FILE=%BIN_DIR%\tjl-project.bat"
@@ -140,21 +174,21 @@ if not exist "%PS_PROFILE_DIR%" mkdir "%PS_PROFILE_DIR%"
 :: Add PowerShell functions and completion
 (
     echo function New-TJLProject {
-    echo     param($projectName, $template = "basic", $path = $null, $environments = "local,dev,staging,prod"^)
-    echo     $cmd = "tjl-project.py $projectName"
-    echo     if ($template^) { $cmd += " --template $template" }
-    echo     if ($path^) { $cmd += " --path $path" }
-    echo     if ($environments^) { $cmd += " --environments $environments" }
+    echo     param($projectName, $template = "basic", $path = $null, $environments = "local,dev,staging,prod")
+    echo     $cmd = "src/tjl-project.py $projectName"
+    echo     if ($template) { $cmd += " --template $template" }
+    echo     if ($path) { $cmd += " --path $path" }
+    echo     if ($environments) { $cmd += " --environments $environments" }
     echo     & python "%BIN_DIR%\$cmd"
     echo }
     echo Set-Alias tjl New-TJLProject
     echo 
     echo # TJL Project completion
     echo Register-ArgumentCompleter -CommandName tjl -ScriptBlock {
-    echo     param($wordToComplete, $commandAst, $cursorPosition^)
-    echo     $templates = @('basic', 'microservice', 'webapp', 'library'^)
+    echo     param($wordToComplete, $commandAst, $cursorPosition)
+    echo     $templates = @('basic', 'microservice', 'webapp', 'library')
     echo     $templates | Where-Object { $_ -like "$wordToComplete*" } | ForEach-Object {
-    echo         [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_^)
+    echo         [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
     echo     }
     echo }
 ) > "%PS_PROFILE%"

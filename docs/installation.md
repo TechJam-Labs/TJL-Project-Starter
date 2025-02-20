@@ -47,7 +47,7 @@ Choose the installation method that best suits your environment and needs.
    cd C:\
    
    # Download installer
-   curl -o install.bat https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/install.bat
+   curl -o install.bat https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/installation/windowsinstall.bat
    
    # Run installer
    .\install.bat
@@ -64,7 +64,7 @@ Choose the installation method that best suits your environment and needs.
 1. **Download Installer**
    ```bash
    # Download installer
-   curl -O https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/install.sh
+   curl -O https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/installation/unix/install.sh
    
    # Make executable
    chmod +x install.sh
@@ -87,7 +87,7 @@ Choose the installation method that best suits your environment and needs.
 
 1. **Download Docker Setup**
    ```bash
-   curl -O https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/docker-setup.sh
+   curl -O https://raw.githubusercontent.com/TechJam-Labs/TJL-Project-Starter/main/installation/docker/docker-setup.sh
    chmod +x docker-setup.sh
    ```
 
@@ -200,3 +200,9 @@ After installation, see:
 - [Quick Start Guide](quickstart.md) for your first project
 - [Environment Management](environment-management.md) for configuration
 - [Repository Strategy](repository-strategy.md) for version control best practices
+
+# Copy utility scripts
+cp scripts/switch_env.sh ~/.local/bin/
+cp scripts/deploy.sh ~/.local/bin/
+chmod +x ~/.local/bin/switch_env.sh
+chmod +x ~/.local/bin/deploy.sh

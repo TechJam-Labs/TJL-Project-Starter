@@ -216,3 +216,35 @@ echo "For help:"
 echo "  tjl-docker --help"
 echo
 print_blue "Happy coding!"
+
+# Copy utility scripts
+print_blue "Copying utility scripts..."
+cp scripts/switch_env.sh /usr/local/bin/
+cp scripts/deploy.sh /usr/local/bin/
+chmod +x /usr/local/bin/switch_env.sh
+chmod +x /usr/local/bin/deploy.sh
+print_green "✓ Copied utility scripts"
+
+# Copy project templates
+print_blue "Copying templates..."
+mkdir -p /app/templates
+cp -r templates/basic /app/templates/
+cp -r templates/microservice /app/templates/
+cp -r templates/webapp /app/templates/
+cp -r templates/library /app/templates/
+print_green "✓ Copied templates"
+
+# Copy example projects
+print_blue "Copying example projects..."
+mkdir -p /app/examples
+cp -r examples/basic-example /app/examples/basic
+cp -r examples/microservice-example /app/examples/microservice
+cp -r examples/webapp-example /app/examples/webapp
+cp -r examples/library-example /app/examples/library
+print_green "✓ Copied example projects"
+
+# Copy documentation
+print_blue "Copying documentation..."
+mkdir -p /app/docs
+cp -r docs/* /app/docs/
+print_green "✓ Copied documentation"

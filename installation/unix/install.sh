@@ -123,10 +123,28 @@ copy_files() {
     chmod +x "$BIN_DIR/tjl-project"
 
     # Copy templates
-    cp -r templates/* "$INSTALL_DIR/templates/"
+    print_blue "Copying templates..."
+    mkdir -p "$INSTALL_DIR/templates"
+    cp -r templates/basic "$INSTALL_DIR/templates/"
+    cp -r templates/microservice "$INSTALL_DIR/templates/"
+    cp -r templates/webapp "$INSTALL_DIR/templates/"
+    cp -r templates/library "$INSTALL_DIR/templates/"
+    print_green "✓ Copied templates"
 
     # Copy documentation
+    print_blue "Copying documentation..."
+    mkdir -p "$INSTALL_DIR/docs"
     cp -r docs/* "$INSTALL_DIR/docs/"
+    print_green "✓ Copied documentation"
+
+    # Copy example projects
+    print_blue "Copying example projects..."
+    mkdir -p "$INSTALL_DIR/examples"
+    cp -r examples/basic-example "$INSTALL_DIR/examples/basic"
+    cp -r examples/microservice-example "$INSTALL_DIR/examples/microservice"
+    cp -r examples/webapp-example "$INSTALL_DIR/examples/webapp"
+    cp -r examples/library-example "$INSTALL_DIR/examples/library"
+    print_green "✓ Copied example projects"
 
     print_green "✓ Copied all files"
 }
