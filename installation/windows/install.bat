@@ -20,6 +20,11 @@ set "TEMPLATES_DIR=%INSTALL_DIR%\templates"
 set "DOCS_DIR=%INSTALL_DIR%\docs"
 set "COMPLETION_DIR=%INSTALL_DIR%\completion"
 
+:: Get script directory
+set "SCRIPT_DIR=%~dp0"
+set "PROJECT_ROOT=%SCRIPT_DIR%..\..\"
+cd /d "%PROJECT_ROOT%"
+
 :: Header
 echo %BLUE%=== TJL Project Setup Tool Installer ===%RESET%
 echo.
@@ -81,9 +86,13 @@ echo %BLUE%Copying main script...%RESET%
 copy /Y "src\tjl-project.py" "%BIN_DIR%\tjl-project.py" > nul
 if %ERRORLEVEL% neq 0 (
     echo %RED%Error: Failed to copy main script%RESET%
-    echo Please ensure you're running the installer from the project root directory
+    echo Please ensure all required files are present:
     echo Current directory: %CD%
-    echo Expected file: %CD%\src\tjl-project.py
+    echo Required files:
+    echo - src\tjl-project.py
+    echo - templates\*
+    echo - docs\*
+    echo - completion\*
     exit /b 1
 )
 echo %GREEN%√ Copied main script%RESET%

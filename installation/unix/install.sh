@@ -38,6 +38,10 @@ BIN_DIR="$INSTALL_BASE/bin"
 COMPLETION_DIR="$INSTALL_BASE/share/bash-completion/completions"
 ZSH_COMPLETION_DIR="$INSTALL_BASE/share/zsh/site-functions"
 
+# Get script directory and project root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 # Check system requirements
 check_requirements() {
     print_blue "Checking system requirements..."
@@ -113,9 +117,10 @@ install_dependencies() {
 # Copy files
 copy_files() {
     print_blue "Copying files..."
+    cd "$PROJECT_ROOT"
 
     # Copy main script
-    cp tjl-project.py "$INSTALL_DIR/bin/"
+    cp src/tjl-project.py "$INSTALL_DIR/bin/"
     chmod +x "$INSTALL_DIR/bin/tjl-project.py"
 
     # Create symlink

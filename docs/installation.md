@@ -40,11 +40,14 @@ Choose the installation method that best suits your environment and needs.
    # Clone the repository
    git clone https://github.com/TechJam-Labs/TJL-Project-Starter.git
    cd TJL-Project-Starter
+   
+   # Or download and extract the ZIP file
+   # https://github.com/TechJam-Labs/TJL-Project-Starter/archive/main.zip
    ```
 
 2. **Run Installer**
    ```powershell
-   # Run installer from project root
+   # Run installer (from any directory)
    .\installation\windows\install.bat
    ```
 
